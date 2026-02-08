@@ -251,34 +251,23 @@
                 width: 120px;
             }
         }
-        /* 可选：引入特殊字体（示例：阿里巴巴普惠体，无需本地文件） */
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
-        /* 如需添加自定义字体，在这里加@font-face即可，示例：
-        /* 可选：引入特殊字体（示例：阿里巴巴普惠体，无需本地文件） */
-/* 自定义字体引用 - 6款字体 */
-@font-face {
-    font-family: 'Asther';
-    src: url('https://mirrornir.github.io/9-16-image-combiner/Asther-Regular.ttf') format('truetype');
-}
-@font-face {
-    font-family: 'Honey Monly';
-    src: url('https://mirrornir.github.io/9-16-image-combiner/Honey Monly.otf') format('opentype');
-}
-@font-face {
-    font-family: 'Knive';
-    src: url('https://mirrornir.github.io/9-16-image-combiner/Knive.otf') format('opentype');
-}
-@font-face {
-    font-family: 'Sundries';
-    src: url('https://mirrornir.github.io/9-16-image-combiner/Sundries-DEMO-NEW.otf') format('opentype');
-}
-@font-face {
-    font-family: 'Accountant Signature';
-    src: url('https://mirrornir.github.io/9-16-image-combiner/accountantsignature-rpxr6.ttf') format('truetype');
-}
-@font-face {
-    font-family: 'Smooth Fantasy';
-    src: url('https://mirrornir.github.io/9-16-image-combiner/smoothfantasypersonaluse-p7rd1.ttf') format('truetype');
+
+/* 可选：引入基础字体 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
+
+/* ZSFT-609 字体（原有） */
+@import url("data:text/css,%40font-face%7Bfont-family%3A%22ZSFT-609%22%3Bsrc%3Aurl(%22https%3A%2F%2Ffontsapi.zeoseven.com%2F609%2Fbold.woff2%22)%20format(%22woff2%22)%3Bfont-style%3Anormal%3Bfont-weight%3A700%3Bfont-display%3Aswap%3B%7D%40font-face%7Bfont-family%3A%22ZSFT-609%22%3Bsrc%3Aurl(%22https%3A%2F%2Ffontsapi.zeoseven.com%2F609%2Fbold-italic.woff2%22)%20format(%22woff2%22)%3Bfont-style%3Aitalic%3Bfont-weight%3A700%3Bfont-display%3Aswap%3B%7D%40font-face%7Bfont-family%3A%22ZSFT-609%22%3Bsrc%3Aurl(%22https%3A%2F%2Ffontsapi.zeoseven.com%2F609%2Fitalic.woff2%22)%20format(%22woff2%22)%3Bfont-style%3Aitalic%3Bfont-weight%3A400%3Bfont-display%3Aswap%3B%7D%40font-face%7Bfont-family%3A%22ZSFT-609%22%3Bsrc%3Aurl(%22https%3A%2F%2Ffontsapi.zeoseven.com%2F609%2Fmain.woff2%22)%20format(%22woff2%22)%3Bfont-style%3Anormal%3Bfont-weight%3A400%3Bfont-display%3Aswap%3B%7D");
+
+/* 新增：Aidian FengYaHei 字体 */
+@import url("https://fontsapi.zeoseven.com/354/main/result.css");
+
+/* 新增：ZSFT-486 字体 */
+@import url("data:text/css,%40font-face%7Bfont-family%3A%22ZSFT-486%22%3Bsrc%3Aurl(%22https%3A%2F%2Ffontsapi.zeoseven.com%2F486%2Fmain.woff2%22)%20format(%22woff2%22)%3Bfont-style%3Anormal%3Bfont-weight%3A100%20900%3Bfont-display%3Aswap%3B%7D");
+
+/* 网页自身文字样式（合并body） */
+body {
+    font-family: "Aidian FengYaHei", "ZSFT-486", "ZSFT-609", sans-serif;
+    font-weight: normal;
 }
     </style>
 </head>
@@ -302,24 +291,20 @@
                 <input type="text" id="startNum" value="1" placeholder="正整数">
             </div>
 
-            <div class="setting-item">
-                <label for="fontFamily">数字字体：</label>
-                <select id="fontFamily">
-                    <option value="Microsoft YaHei, Arial">微软雅黑</option>
-                    <option value="SimSun, serif">宋体</option>
-                    <option value="SimHei, sans-serif">黑体</option>
-                    <option value="Arial, sans-serif">Arial</option>
-                    <option value="Noto Sans SC, sans-serif">思源黑体</option>
-                    <!-- 如需添加自定义字体，新增<option value="MyCustomFont">我的自定义字体</option>即可 -->
-                    <!-- 新增6款自定义字体 -->
-                     <option value="Asther">Asther</option>
-                     <option value="Honey Monly">Honey Monly</option>
-                     <option value="Knive">Knive</option>
-                     <option value="Sundries">Sundries-DEMO-NEW</option>
-                     <option value="Accountant Signature">Accountant Signature</option>
-                     <option value="Smooth Fantasy">Smooth Fantasy</option>
-                </select>
-            </div>
+<div class="setting-item">
+    <label for="fontFamily">数字字体：</label>
+    <select id="fontFamily">
+        <option value="Microsoft YaHei, Arial">微软雅黑</option>
+        <option value="SimSun, serif">宋体</option>
+        <option value="SimHei, sans-serif">黑体</option>
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="Noto Sans SC, sans-serif">思源黑体</option>
+        <!-- 新增URL引入的字体（删除原有6款本地字体） -->
+        <option value="ZSFT-609">ZSFT-609</option>
+        <option value="Aidian FengYaHei">Aidian FengYaHei</option>
+        <option value="ZSFT-486">ZSFT-486</option>
+    </select>
+</div>
 
             <div class="setting-item">
                 <label for="fontColor">字体颜色：</label>
