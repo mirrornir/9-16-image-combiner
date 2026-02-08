@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9:16批量图片拼接工具（终极修复版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+        body {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f1f1f1;
+        }
+        .container {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+        .upload-area:hover {
+            border-color: #1677ff;
+            background-color: #f5faff;
+        }
+        .upload-area.active {
+            border-color: #1677ff;
+            background-color: #f5faff;
+        }
+        #fileInput {
+            display: none;
+        }
+        .upload-tip {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .upload-subtip {
+            color: #999;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        /* 配置栏样式 */
+        .setting-bar {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px 20px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .setting-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .setting-item label {
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .setting-item input[type="text"] {
+            width: 100px;
+            padding: 8px 12px;
+            border: 1px solid #dcdcdc;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+        }
+        .setting-item input[type="text"]:focus {
+            border-color: #1677ff;
+        }
+        .setting-item input[type="range"] {
+            width: 150px;
+            cursor: pointer;
+        }
+        .setting-item .num-size-tip {
+            color: #666;
+            font-size: 14px;
+            width: 60px;
+        }
+        .file-count {
+            font-size: 15px;
+            color: #666;
+            white-space: nowrap;
+        }
+        .ratio-tip {
+            font-size: 14px;
+            color: #1677ff;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .btn-group {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 36px;
+            background-color: #1677ff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .btn:hover {
+            background-color: #0d66e8;
+        }
+        .btn:disabled {
+            background-color: #dcdcdc;
+            cursor: not-allowed;
+            color: #999;
+        }
+        .btn-clear {
+            background-color: #fff;
+            color: #666;
+            border: 1px solid #dcdcdc;
+        }
+        .btn-clear:hover {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        /* 双进度条：处理+拼接 */
+        .progress-wrapper {
+            margin-bottom: 30px;
+            display: none;
+        }
+        .progress-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e5e5e5;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #1677ff;
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+        .result-area {
+            display: none;
+            margin-top: 20px;
+        }
+        .result-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        .result-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .result-item {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .item-name {
+            color: #333;
+            font-size: 15px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .download-link {
+            display: inline-block;
+            color: #1677ff;
+            font-size: 14px;
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid #1677ff;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        .download-link:hover {
+            background-color: #1677ff;
+            color: #fff;
+        }
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            .upload-area {
+                padding: 40px 10px;
+            }
+            .btn {
+                padding: 12px 24px;
+                font-size: 14px;
+                margin: 0 5px 10px;
+            }
+            .setting-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .setting-item {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .setting-item input[type="range"] {
+                width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>9:16批量图片拼接工具（终极修复版）</h1>
+        
+        <!-- 上传区域 -->
+        <div class="upload-area" id="uploadArea">
+            <p class="upload-tip">点击或拖拽图片到此处上传（支持一次性上传200张内）</p>
+            <p class="upload-subtip">支持JPG/PNG/BMP | 图片仅本地处理 | 非9:16图不变形居中填充 | 所有图片100%显示</p>
+            <input type="file" id="fileInput" accept="image/*" multiple>
+        </div>
+        
+        <!-- 配置栏：初始数字+序号大小 -->
+        <div class="setting-bar">
+            <div class="file-count" id="fileCount">已选择：0 张图片</div>
+            <div class="setting-item">
+                <label for="startNum">初始序号：</label>
+                <input type="text" id="startNum" value="1" placeholder="正整数">
+            </div>
+            <div class="setting-item">
+                <label for="numSize">数字大小：</label>
+                <input type="range" id="numSize" min="0" max="20" step="0.5" value="12">
+                <span class="num-size-tip" id="numSizeTip">12.0%</span>
+            </div>
+            <div class="ratio-tip">9:16不变形 | 中间偏下序号 | 每9张一组</div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="btn-group">
+            <button class="btn" id="combineBtn" disabled>开始批量拼接</button>
+            <button class="btn btn-clear" id="clearBtn">清空已选图片</button>
+        </div>
+        
+        <!-- 双进度条：图片处理+拼图绘制 -->
+        <div class="progress-wrapper" id="progressWrapper">
+            <div class="progress-title">1. 图片处理进度（加序号+9:16适配）：</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="processProgressBar"></div>
+            </div>
+            <div class="progress-title" style="margin-top: 10px;">2. 拼图绘制进度：</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="combineProgressBar"></div>
+            </div>
+        </div>
+        
+        <!-- 拼接结果 -->
+        <div class="result-area" id="resultArea">
+            <h3 class="result-title">拼接结果（点击下载，严格9:16）：</h3>
+            <div class="result-list" id="resultList"></div>
+        </div>
+    </div>
+
+    <script>
+        // 核心配置（无需修改）
+        const CONFIG = {
+            GROUP_NUM: 9,          // 每9张一组
+            RATIO_W: 9,            // 9:16比例
+            RATIO_H: 16,
+            STROKE_RATIO: 0.03,    // 描边宽度（数字高度3%）
+            NUM_POS_Y: 0.85,       // 序号Y轴：图片85%高度（中间偏下）
+            MAX_UPLOAD: 200,       // 最大200张
+            BASE_W: 900,           // 单张基础宽度
+            BG_COLOR: '#ffffff'    // 空白区域填充色
+        };
+
+        // 全局变量
+        let selectedFiles = [];
+        let processedImages = []; // 缓存所有处理后的图片（加序号+9:16）
+        
+        // 页面元素
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileCount = document.getElementById('fileCount');
+        const startNumInput = document.getElementById('startNum');
+        const numSizeSlider = document.getElementById('numSize');
+        const numSizeTip = document.getElementById('numSizeTip');
+        const combineBtn = document.getElementById('combineBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const progressWrapper = document.getElementById('progressWrapper');
+        const processProgressBar = document.getElementById('processProgressBar');
+        const combineProgressBar = document.getElementById('combineProgressBar');
+        const resultArea = document.getElementById('resultArea');
+        const resultList = document.getElementById('resultList');
+
+        // 初始化
+        function init() {
+            // 1. 拖拽上传
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('active');
+            });
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('active');
+            });
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('active');
+                e.dataTransfer.files.length && handleFiles(e.dataTransfer.files);
+            });
+
+            // 2. 点击上传
+            uploadArea.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+            // 3. 序号大小滑块
+            numSizeSlider.addEventListener('input', () => {
+                numSizeTip.textContent = `${numSizeSlider.value}%`;
+            });
+
+            // 4. 按钮事件
+            combineBtn.addEventListener('click', startFullProcess);
+            clearBtn.addEventListener('click', clearAllFiles);
+
+            // 5. 初始数字校验
+            startNumInput.addEventListener('input', () => {
+                startNumInput.value = startNumInput.value.replace(/\D/g, '');
+                if (startNumInput.value === '') startNumInput.value = 1;
+            });
+        }
+
+        // 处理上传文件
+        function handleFiles(files) {
+            // 过滤图片文件
+            const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+            if (imageFiles.length === 0) {
+                alert('请选择有效的图片文件（JPG/PNG/BMP）！');
+                return;
+            }
+
+            // 限制200张
+            const totalAfterAdd = selectedFiles.length + imageFiles.length;
+            if (totalAfterAdd > CONFIG.MAX_UPLOAD) {
+                const addCount = CONFIG.MAX_UPLOAD - selectedFiles.length;
+                selectedFiles = [...selectedFiles, ...imageFiles.slice(0, addCount)];
+                alert(`最多支持上传200张图片，已为你截取前${CONFIG.MAX_UPLOAD}张！`);
+            } else {
+                selectedFiles = [...selectedFiles, ...imageFiles];
+            }
+
+            // 更新计数，启用按钮
+            fileCount.textContent = `已选择：${selectedFiles.length} 张图片`;
+            combineBtn.disabled = selectedFiles.length === 0;
+        }
+
+        // 清空所有
+        function clearAllFiles() {
+            selectedFiles = [];
+            processedImages = [];
+            fileInput.value = '';
+            startNumInput.value = 1;
+            numSizeSlider.value = 12;
+            numSizeTip.textContent = '12.0%';
+            fileCount.textContent = `已选择：0 张图片`;
+            combineBtn.disabled = true;
+            resultArea.style.display = 'none';
+            resultList.innerHTML = '';
+            progressWrapper.style.display = 'none';
+            processProgressBar.style.width = '0%';
+            combineProgressBar.style.width = '0%';
+        }
+
+        // 单张图片处理：9:16不变形+添加序号（返回Promise）
+        function processSingleImage(file, number) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                
+                reader.onload = (e) => {
+                    const img = new Image();
+                    // 跨域处理（避免部分图片加载失败）
+                    img.crossOrigin = 'anonymous';
+                    
+                    img.onload = () => {
+                        try {
+                            // 1. 计算9:16适配参数（不变形）
+                            const targetRatio = CONFIG.RATIO_W / CONFIG.RATIO_H;
+                            const imgRatio = img.width / img.height;
+                            let drawW, drawH, offsetX = 0, offsetY = 0;
+
+                            if (imgRatio > targetRatio) {
+                                // 图片偏宽，居中裁剪左右
+                                drawH = img.height;
+                                drawW = img.height * targetRatio;
+                                offsetX = (img.width - drawW) / 2;
+                            } else {
+                                // 图片偏高，居中裁剪上下
+                                drawW = img.width;
+                                drawH = img.width / targetRatio;
+                                offsetY = (img.height - drawH) / 2;
+                            }
+
+                            // 2. 创建9:16画布
+                            const baseH = (CONFIG.BASE_W / CONFIG.RATIO_W) * CONFIG.RATIO_H;
+                            const canvas = document.createElement('canvas');
+                            canvas.width = CONFIG.BASE_W;
+                            canvas.height = baseH;
+                            const ctx = canvas.getContext('2d');
+
+                            // 3. 填充白色背景
+                            ctx.fillStyle = CONFIG.BG_COLOR;
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                            // 4. 绘制原图（不变形，居中）
+                            ctx.drawImage(
+                                img,
+                                offsetX, offsetY, drawW, drawH,
+                                0, 0, canvas.width, canvas.height
+                            );
+
+                            // 5. 添加中间偏下序号（自定义大小+醒目）
+                            const numSizeRatio = parseFloat(numSizeSlider.value) / 100;
+                            const fontSize = baseH * numSizeRatio;
+                            const strokeWidth = fontSize * CONFIG.STROKE_RATIO;
+
+                            // 序号样式
+                            ctx.font = `bold ${fontSize}px "Microsoft YaHei", Arial`;
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillStyle = '#ffffff'; // 白色字体
+                            ctx.strokeStyle = '#000000'; // 黑色描边
+                            ctx.lineWidth = strokeWidth;
+
+                            // 序号位置：水平居中，垂直85%高度（中间偏下）
+                            const x = canvas.width / 2;
+                            const y = canvas.height * CONFIG.NUM_POS_Y;
+                            const text = number.toString();
+
+                            // 先描边后填充，无背景醒目
+                            ctx.strokeText(text, x, y);
+                            ctx.fillText(text, x, y);
+
+                            // 6. 转换为Blob返回
+                            canvas.toBlob((blob) => {
+                                if (blob) {
+                                    resolve({
+                                        blob: blob,
+                                        width: canvas.width,
+                                        height: canvas.height,
+                                        number: number
+                                    });
+                                } else {
+                                    reject(new Error(`图片${file.name}转换失败`));
+                                }
+                            }, 'image/jpeg', 1.0);
+                        } catch (err) {
+                            reject(new Error(`图片${file.name}处理失败：${err.message}`));
+                        }
+                    };
+
+                    img.onerror = () => {
+                        reject(new Error(`图片${file.name}加载失败，请检查文件是否损坏`));
+                    };
+
+                    img.src = e.target.result;
+                };
+
+                reader.onerror = () => {
+                    reject(new Error(`文件${file.name}读取失败`));
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // 批量处理所有图片（第一阶段：加序号+9:16）
+        async function batchProcessImages(startNum) {
+            processedImages = [];
+            const total = selectedFiles.length;
+            
+            for (let i = 0; i < total; i++) {
+                try {
+                    // 当前图片的序号
+                    const currentNum = startNum + i;
+                    // 处理单张图片
+                    const processedImg = await processSingleImage(selectedFiles[i], currentNum);
+                    processedImages.push(processedImg);
+                } catch (err) {
+                    // 单张失败提示，但继续处理其他图片
+                    console.warn(err.message);
+                    alert(err.message + '，已跳过该图片继续处理');
+                }
+                
+                // 更新处理进度
+                const progress = ((i + 1) / total) * 100;
+                processProgressBar.style.width = `${progress}%`;
+            }
+            
+            // 处理完成校验
+            if (processedImages.length === 0) {
+                throw new Error('没有可拼接的有效图片');
+            }
+        }
+
+        // 拼接单组图片（第二阶段：确保所有图片加载完成再绘制）
+        function combineSingleGroup(groupImages, groupIdx, startNum, totalFiles) {
+            return new Promise((resolve) => {
+                const singleW = CONFIG.BASE_W;
+                const singleH = (CONFIG.BASE_W / CONFIG.RATIO_W) * CONFIG.RATIO_H;
+                const combineW = singleW * 3;
+                const combineH = singleH * 3;
+
+                // 创建拼接画布
+                const canvas = document.createElement('canvas');
+                canvas.width = combineW;
+                canvas.height = combineH;
+                const ctx = canvas.getContext('2d');
+
+                // 填充白色背景
+                ctx.fillStyle = CONFIG.BG_COLOR;
+                ctx.fillRect(0, 0, combineW, combineH);
+
+                // 加载并绘制所有图片（计数器确保全部加载）
+                let loadedCount = 0;
+                const totalGroupImages = groupImages.length;
+
+                // 遍历组内图片
+                groupImages.forEach((imgData, idx) => {
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    
+                    img.onload = () => {
+                        // 计算3×3网格位置
+                        const col = idx % 3;
+                        const row = Math.floor(idx / 3);
+                        const x = col * singleW;
+                        const y = row * singleH;
+
+                        // 绘制图片
+                        ctx.drawImage(img, x, y, singleW, singleH);
+
+                        loadedCount++;
+
+                        // 所有图片加载绘制完成后生成结果
+                        if (loadedCount === totalGroupImages) {
+                            canvas.toBlob((blob) => {
+                                const gStart = startNum + groupIdx * CONFIG.GROUP_NUM;
+                                const gEnd = Math.min(
+                                    startNum + (groupIdx + 1) * CONFIG.GROUP_NUM - 1,
+                                    startNum + totalFiles - 1
+                                );
+                                const fileName = `9:16拼接组${groupIdx + 1}（${gStart}-${gEnd}号）.jpg`;
+                                resolve({
+                                    fileName: fileName,
+                                    downloadUrl: URL.createObjectURL(blob)
+                                });
+                            }, 'image/jpeg', 1.0);
+                        }
+                    };
+
+                    img.onerror = () => {
+                        // 单张图片加载失败，仍标记为完成（空白显示）
+                        loadedCount++;
+                        if (loadedCount === totalGroupImages) {
+                            canvas.toBlob((blob) => {
+                                const gStart = startNum + groupIdx * CONFIG.GROUP_NUM;
+                                const gEnd = Math.min(
+                                    startNum + (groupIdx + 1) * CONFIG.GROUP_NUM - 1,
+                                    startNum + totalFiles - 1
+                                );
+                                const fileName = `9:16拼接组${groupIdx + 1}（${gStart}-${gEnd}号）.jpg`;
+                                resolve({
+                                    fileName: fileName,
+                                    downloadUrl: URL.createObjectURL(blob)
+                                });
+                            }, 'image/jpeg', 1.0);
+                        }
+                    };
+
+                    img.src = URL.createObjectURL(imgData.blob);
+                });
+            });
+        }
+
+        // 批量拼接所有组（第二阶段）
+        async function batchCombineImages(startNum) {
+            const totalProcessed = processedImages.length;
+            const groupCount = Math.ceil(totalProcessed / CONFIG.GROUP_NUM);
+            const results = [];
+
+            for (let groupIdx = 0; groupIdx < groupCount; groupIdx++) {
+                // 截取当前组图片
+                const start = groupIdx * CONFIG.GROUP_NUM;
+                const end = Math.min((groupIdx + 1) * CONFIG.GROUP_NUM, totalProcessed);
+                const groupImages = processedImages.slice(start, end);
+
+                // 拼接当前组
+                const groupResult = await combineSingleGroup(
+                    groupImages, 
+                    groupIdx, 
+                    startNum, 
+                    selectedFiles.length
+                );
+                results.push(groupResult);
+
+                // 更新拼接进度
+                const progress = ((groupIdx + 1) / groupCount) * 100;
+                combineProgressBar.style.width = `${progress}%`;
+            }
+
+            return results;
+        }
+
+        // 主流程：先处理所有图片 → 再拼接所有组
+        async function startFullProcess() {
+            // 1. 校验初始数字
+            let startNum = parseInt(startNumInput.value) || 1;
+            startNum = Math.max(startNum, 1);
+            startNumInput.value = startNum;
+
+            // 2. 初始化页面状态
+            resultArea.style.display = 'none';
+            resultList.innerHTML = '';
+            progressWrapper.style.display = 'block';
+            processProgressBar.style.width = '0%';
+            combineProgressBar.style.width = '0%';
+            combineBtn.disabled = true;
+
+            try {
+                // 第一阶段：批量处理所有图片（加序号+9:16）
+                await batchProcessImages(startNum);
+
+                // 第二阶段：批量拼接所有组
+                const results = await batchCombineImages(startNum);
+
+                // 显示结果
+                resultArea.style.display = 'block';
+                results.forEach(res => {
+                    const item = document.createElement('div');
+                    item.className = 'result-item';
+                    item.innerHTML = `
+                        <p class="item-name">${res.fileName}</p>
+                        <a href="${res.downloadUrl}" download="${res.fileName}" class="download-link">点击下载</a>
+                    `;
+                    resultList.appendChild(item);
+                });
+
+                alert(`拼接完成！共处理${processedImages.length}张图片，生成${results.length}组拼图`);
+            } catch (err) {
+                alert(`拼接失败：${err.message}`);
+            } finally {
+                // 恢复按钮状态
+                combineBtn.disabled = false;
+                // 5秒后隐藏进度条（可选）
+                setTimeout(() => {
+                    progressWrapper.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // 页面加载完成初始化
+        window.onload = init;
+    </script>
+</body>
+</html>
