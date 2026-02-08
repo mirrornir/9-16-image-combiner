@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9:16批量图片拼接工具（字体颜色全自定义）</title>
+    <title>多规格批量图片拼接工具（序号自定义）</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
             font-family: "Microsoft YaHei", Arial, sans-serif;
         }
         body {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
             background-color: #f1f1f1;
@@ -60,7 +60,7 @@
             font-size: 14px;
             line-height: 1.5;
         }
-        /* 扩展配置栏：字体/颜色/大小 */
+        /* 扩展配置栏：多规格+字体/颜色/大小 */
         .setting-bar {
             background-color: #f8f8f8;
             padding: 20px;
@@ -252,37 +252,31 @@
             }
         }
 
-/* 可选：引入基础字体 */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
-
-/* ZSFT-609 字体（原有） */
-@import url("data:text/css,%40font-face%7Bfont-family%3A%22ZSFT-609%22%3Bsrc%3Aurl(%22https%3A%2F%2Ffontsapi.zeoseven.com%2F609%2Fbold.woff2%22)%20format(%22woff2%22)%3Bfont-style%3Anormal%3Bfont-weight%3A700%3Bfont-display%3Aswap%3B%7D%40font-face%7Bfont-family%3A%22ZSFT-609%22%3Bsrc%3Aurl(%22https%3A%2F%2Ffontsapi.zeoseven.com%2F609%2Fbold-italic.woff2%22)%20format(%22woff2%22)%3Bfont-style%3Aitalic%3Bfont-weight%3A700%3Bfont-display%3Aswap%3B%7D%40font-face%7Bfont-family%3A%22ZSFT-609%22%3Bsrc%3Aurl(%22https%3A%2F%2Ffontsapi.zeoseven.com%2F609%2Fitalic.woff2%22)%20format(%22woff2%22)%3Bfont-style%3Aitalic%3Bfont-weight%3A400%3Bfont-display%3Aswap%3B%7D%40font-face%7Bfont-family%3A%22ZSFT-609%22%3Bsrc%3Aurl(%22https%3A%2F%2Ffontsapi.zeoseven.com%2F609%2Fmain.woff2%22)%20format(%22woff2%22)%3Bfont-style%3Anormal%3Bfont-weight%3A400%3Bfont-display%3Aswap%3B%7D");
-
-/* 新增：Aidian FengYaHei 字体 */
-@import url("https://fontsapi.zeoseven.com/354/main/result.css");
-
-/* 新增：ZSFT-486 字体 */
-@import url("data:text/css,%40font-face%7Bfont-family%3A%22ZSFT-486%22%3Bsrc%3Aurl(%22https%3A%2F%2Ffontsapi.zeoseven.com%2F486%2Fmain.woff2%22)%20format(%22woff2%22)%3Bfont-style%3Anormal%3Bfont-weight%3A100%20900%3Bfont-display%3Aswap%3B%7D");
-
-/* 网页自身文字样式（合并body） */
-body {
-    font-family: "Aidian FengYaHei", "ZSFT-486", "ZSFT-609", sans-serif;
-    font-weight: normal;
-}
+        /* 10款基础字体引入 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Arial+Nova:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Courier+New:wght@400;700&display=swap');
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>9:16批量图片拼接工具（字体颜色全自定义）</h1>
+        <h1>多规格批量图片拼接工具（序号自定义）</h1>
         
         <!-- 上传区域 -->
         <div class="upload-area" id="uploadArea">
             <p class="upload-tip">点击或拖拽图片到此处上传（支持一次性上传200张内）</p>
-            <p class="upload-subtip">支持JPG/PNG/BMP | 图片仅本地处理 | 非9:16图不变形居中填充 | 所有图片100%显示</p>
+            <p class="upload-subtip">支持JPG/PNG/BMP | 图片仅本地处理 | 非目标比例图不变形居中填充 | 所有图片100%显示</p>
             <input type="file" id="fileInput" accept="image/*" multiple>
         </div>
         
-        <!-- 扩展配置栏：初始数字+字体+颜色+大小 -->
+        <!-- 扩展配置栏：多规格+序号+字体+颜色+大小 -->
         <div class="setting-bar">
             <div class="file-count" id="fileCount">已选择：0 张图片</div>
             
@@ -291,20 +285,47 @@ body {
                 <input type="text" id="startNum" value="1" placeholder="正整数">
             </div>
 
-<div class="setting-item">
-    <label for="fontFamily">数字字体：</label>
-    <select id="fontFamily">
-        <option value="Microsoft YaHei, Arial">微软雅黑</option>
-        <option value="SimSun, serif">宋体</option>
-        <option value="SimHei, sans-serif">黑体</option>
-        <option value="Arial, sans-serif">Arial</option>
-        <option value="Noto Sans SC, sans-serif">思源黑体</option>
-        <!-- 新增URL引入的字体（删除原有6款本地字体） -->
-        <option value="ZSFT-609">ZSFT-609</option>
-        <option value="Aidian FengYaHei">Aidian FengYaHei</option>
-        <option value="ZSFT-486">ZSFT-486</option>
-    </select>
-</div>
+            <div class="setting-item">
+                <label for="targetRatio">拼图规格：</label>
+                <select id="targetRatio">
+                    <option value="9:16">9:16</option>
+                    <option value="16:9">16:9</option>
+                    <option value="3:4">3:4</option>
+                    <option value="4:3">4:3</option>
+                    <option value="1:1">1:1</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label for="fontFamily">数字字体：</label>
+                <select id="fontFamily">
+                    <option value="Microsoft YaHei, Arial">微软雅黑</option>
+                    <option value="SimSun, serif">宋体</option>
+                    <option value="SimHei, sans-serif">黑体</option>
+                    <option value="Noto Sans SC, sans-serif">思源黑体</option>
+                    <option value="Roboto, sans-serif">Roboto</option>
+                    <option value="Open Sans, sans-serif">Open Sans</option>
+                    <option value="Montserrat, sans-serif">Montserrat</option>
+                    <option value="Lato, sans-serif">Lato</option>
+                    <option value="Poppins, sans-serif">Poppins</option>
+                    <option value="Arial Nova, sans-serif">Arial Nova</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="Times New Roman, serif">Times New Roman</option>
+                    <option value="Courier New, monospace">Courier New</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label for="fontWeight">字体粗细：</label>
+                <select id="fontWeight">
+                    <option value="100">极细</option>
+                    <option value="300">细体</option>
+                    <option value="400" selected>常规</option>
+                    <option value="600">半粗</option>
+                    <option value="700">粗体</option>
+                    <option value="900">极粗</option>
+                </select>
+            </div>
 
             <div class="setting-item">
                 <label for="fontColor">字体颜色：</label>
@@ -322,7 +343,7 @@ body {
                 <span class="num-size-tip" id="numSizeTip">12.0%</span>
             </div>
             
-            <div class="ratio-tip">9:16不变形 | 中间偏下序号 | 每9张一组</div>
+            <div class="ratio-tip">3×3网格 | 中间偏下序号 | 9张一组 | 所有图片加载完成后绘制</div>
         </div>
         
         <!-- 操作按钮 -->
@@ -333,7 +354,7 @@ body {
         
         <!-- 双进度条 -->
         <div class="progress-wrapper" id="progressWrapper">
-            <div class="progress-title">1. 图片处理进度（加序号+9:16适配）：</div>
+            <div class="progress-title">1. 图片加载+序号处理进度：</div>
             <div class="progress-container">
                 <div class="progress-bar" id="processProgressBar"></div>
             </div>
@@ -345,7 +366,7 @@ body {
         
         <!-- 拼接结果 -->
         <div class="result-area" id="resultArea">
-            <h3 class="result-title">拼接结果（点击下载，严格9:16）：</h3>
+            <h3 class="result-title">拼接结果（点击下载）：</h3>
             <div class="result-list" id="resultList"></div>
         </div>
     </div>
@@ -354,25 +375,34 @@ body {
         // 核心配置
         const CONFIG = {
             GROUP_NUM: 9,
-            RATIO_W: 9,
-            RATIO_H: 16,
-            STROKE_RATIO: 0.03,
-            NUM_POS_Y: 0.85,
             MAX_UPLOAD: 200,
             BASE_W: 900,
-            BG_COLOR: '#ffffff'
+            BG_COLOR: '#ffffff',
+            STROKE_RATIO: 0.03,
+            NUM_POS_Y: 0.85,
+            // 多规格比例配置
+            RATIO_CONFIG: {
+                '3:4': {w: 3, h: 4},
+                '4:3': {w: 4, h: 3},
+                '16:9': {w: 16, h: 9},
+                '9:16': {w: 9, h: 16},
+                '1:1': {w: 1, h: 1}
+            }
         };
 
         // 全局变量
         let selectedFiles = [];
         let processedImages = [];
+        let ratioConfig = CONFIG.RATIO_CONFIG['9:16']; // 默认9:16
         
-        // 页面元素（新增字体/颜色相关）
+        // 页面元素
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const fileCount = document.getElementById('fileCount');
         const startNumInput = document.getElementById('startNum');
+        const targetRatioSelect = document.getElementById('targetRatio');
         const fontFamilySelect = document.getElementById('fontFamily');
+        const fontWeightSelect = document.getElementById('fontWeight');
         const fontColorInput = document.getElementById('fontColor');
         const strokeColorInput = document.getElementById('strokeColor');
         const numSizeSlider = document.getElementById('numSize');
@@ -410,18 +440,23 @@ body {
                 numSizeTip.textContent = `${numSizeSlider.value}%`;
             });
 
-            // 4. 按钮事件
+            // 4. 拼图规格切换
+            targetRatioSelect.addEventListener('change', () => {
+                ratioConfig = CONFIG.RATIO_CONFIG[targetRatioSelect.value];
+            });
+
+            // 5. 按钮事件
             combineBtn.addEventListener('click', startFullProcess);
             clearBtn.addEventListener('click', clearAllFiles);
 
-            // 5. 初始数字校验
+            // 6. 初始数字校验
             startNumInput.addEventListener('input', () => {
                 startNumInput.value = startNumInput.value.replace(/\D/g, '');
                 if (startNumInput.value === '') startNumInput.value = 1;
             });
         }
 
-        // 处理上传文件
+        // 处理上传文件（支持200张）
         function handleFiles(files) {
             const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
             if (imageFiles.length === 0) {
@@ -448,7 +483,9 @@ body {
             processedImages = [];
             fileInput.value = '';
             startNumInput.value = 1;
+            targetRatioSelect.value = '9:16';
             fontFamilySelect.value = 'Microsoft YaHei, Arial';
+            fontWeightSelect.value = '400';
             fontColorInput.value = '#ffffff';
             strokeColorInput.value = '#000000';
             numSizeSlider.value = 12;
@@ -460,9 +497,10 @@ body {
             progressWrapper.style.display = 'none';
             processProgressBar.style.width = '0%';
             combineProgressBar.style.width = '0%';
+            ratioConfig = CONFIG.RATIO_CONFIG['9:16'];
         }
 
-        // 单张图片处理（新增字体/颜色自定义）
+        // 单张图片处理（不变形+序号自定义）
         function processSingleImage(file, number) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -473,8 +511,8 @@ body {
                     
                     img.onload = () => {
                         try {
-                            // 1. 9:16适配计算
-                            const targetRatio = CONFIG.RATIO_W / CONFIG.RATIO_H;
+                            // 1. 目标比例适配计算（不变形）
+                            const targetRatio = ratioConfig.w / ratioConfig.h;
                             const imgRatio = img.width / img.height;
                             let drawW, drawH, offsetX = 0, offsetY = 0;
 
@@ -488,59 +526,70 @@ body {
                                 offsetY = (img.height - drawH) / 2;
                             }
 
-                            // 2. 创建画布
-                            const baseH = (CONFIG.BASE_W / CONFIG.RATIO_W) * CONFIG.RATIO_H;
+                            // 2. 计算基础尺寸（按比例）
+                            let baseW, baseH;
+                            if (ratioConfig.w > ratioConfig.h) {
+                                baseW = CONFIG.BASE_W;
+                                baseH = (CONFIG.BASE_W / ratioConfig.w) * ratioConfig.h;
+                            } else {
+                                baseH = (CONFIG.BASE_W / 9) * 16; // 保持基础高度一致
+                                baseW = (baseH / ratioConfig.h) * ratioConfig.w;
+                            }
+
+                            // 3. 创建画布
                             const canvas = document.createElement('canvas');
-                            canvas.width = CONFIG.BASE_W;
+                            canvas.width = baseW;
                             canvas.height = baseH;
                             const ctx = canvas.getContext('2d');
 
-                            // 3. 填充背景
+                            // 4. 填充背景
                             ctx.fillStyle = CONFIG.BG_COLOR;
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                            // 4. 绘制原图
+                            // 5. 绘制原图（不变形居中）
                             ctx.drawImage(
                                 img,
                                 offsetX, offsetY, drawW, drawH,
                                 0, 0, canvas.width, canvas.height
                             );
 
-                            // 5. 自定义序号样式（核心修改）
+                            // 6. 自定义序号样式
                             const numSizeRatio = parseFloat(numSizeSlider.value) / 100;
                             const fontSize = baseH * numSizeRatio;
                             const strokeWidth = fontSize * CONFIG.STROKE_RATIO;
 
-                            // 获取用户选择的字体/颜色
+                            // 获取用户选择的样式
                             const fontFamily = fontFamilySelect.value;
+                            const fontWeight = fontWeightSelect.value;
                             const fontColor = fontColorInput.value;
                             const strokeColor = strokeColorInput.value;
 
-                            // 设置序号样式（自定义字体+颜色）
-                            ctx.font = `normal ${fontSize}px ${fontFamily}`; // 自定义字体
+                            // 设置序号样式
+                            ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'middle';
-                            ctx.fillStyle = fontColor; // 自定义字体颜色
-                            ctx.strokeStyle = strokeColor; // 自定义描边颜色
+                            ctx.fillStyle = fontColor;
+                            ctx.strokeStyle = strokeColor;
                             ctx.lineWidth = strokeWidth;
 
-                            // 序号位置
+                            // 序号位置（中间偏下）
                             const x = canvas.width / 2;
                             const y = canvas.height * CONFIG.NUM_POS_Y;
                             const text = number.toString();
 
-                            // 绘制序号
+                            // 绘制序号（描边+填充，醒目无背景）
                             ctx.strokeText(text, x, y);
                             ctx.fillText(text, x, y);
 
-                            // 6. 转换为Blob
+                            // 7. 转换为Blob
                             canvas.toBlob((blob) => {
                                 if (blob) {
                                     resolve({
                                         blob: blob,
                                         width: canvas.width,
                                         height: canvas.height,
-                                        number: number
+                                        number: number,
+                                        img: img // 保留原图引用，确保加载完成
                                     });
                                 } else {
                                     reject(new Error(`图片${file.name}转换失败`));
@@ -566,11 +615,12 @@ body {
             });
         }
 
-        // 批量处理所有图片
+        // 批量处理所有图片（确保全部加载完成）
         async function batchProcessImages(startNum) {
             processedImages = [];
             const total = selectedFiles.length;
             
+            // 按顺序处理，确保所有图片加载完成
             for (let i = 0; i < total; i++) {
                 try {
                     const currentNum = startNum + i;
@@ -581,6 +631,7 @@ body {
                     alert(err.message + '，已跳过该图片继续处理');
                 }
                 
+                // 更新进度
                 const progress = ((i + 1) / total) * 100;
                 processProgressBar.style.width = `${progress}%`;
             }
@@ -590,71 +641,60 @@ body {
             }
         }
 
-        // 拼接单组图片
+        // 拼接单组图片（9张完整加载后绘制）
         function combineSingleGroup(groupImages, groupIdx, startNum, totalFiles) {
             return new Promise((resolve) => {
-                const singleW = CONFIG.BASE_W;
-                const singleH = (CONFIG.BASE_W / CONFIG.RATIO_W) * CONFIG.RATIO_H;
-                const combineW = singleW * 3;
-                const combineH = singleH * 3;
+                // 等待组内所有图片加载完成
+                const loadPromises = groupImages.map(imgData => {
+                    return new Promise((resolve) => {
+                        const img = new Image();
+                        img.crossOrigin = 'anonymous';
+                        img.onload = () => resolve({img: img, data: imgData});
+                        img.onerror = () => resolve({img: null, data: imgData});
+                        img.src = URL.createObjectURL(imgData.blob);
+                    });
+                });
 
-                const canvas = document.createElement('canvas');
-                canvas.width = combineW;
-                canvas.height = combineH;
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle = CONFIG.BG_COLOR;
-                ctx.fillRect(0, 0, combineW, combineH);
+                // 所有图片加载完成后统一绘制
+                Promise.all(loadPromises).then(loadedImages => {
+                    // 计算单张尺寸和拼图尺寸（3×3）
+                    const singleW = loadedImages[0]?.data.width || CONFIG.BASE_W / 3;
+                    const singleH = loadedImages[0]?.data.height || (CONFIG.BASE_W / 3) * (ratioConfig.h / ratioConfig.w);
+                    const combineW = singleW * 3;
+                    const combineH = singleH * 3;
 
-                let loadedCount = 0;
-                const totalGroupImages = groupImages.length;
+                    // 创建拼图画布
+                    const canvas = document.createElement('canvas');
+                    canvas.width = combineW;
+                    canvas.height = combineH;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = CONFIG.BG_COLOR;
+                    ctx.fillRect(0, 0, combineW, combineH);
 
-                groupImages.forEach((imgData, idx) => {
-                    const img = new Image();
-                    img.crossOrigin = 'anonymous';
-                    
-                    img.onload = () => {
-                        const col = idx % 3;
-                        const row = Math.floor(idx / 3);
-                        const x = col * singleW;
-                        const y = row * singleH;
-                        ctx.drawImage(img, x, y, singleW, singleH);
-
-                        loadedCount++;
-                        if (loadedCount === totalGroupImages) {
-                            canvas.toBlob((blob) => {
-                                const gStart = startNum + groupIdx * CONFIG.GROUP_NUM;
-                                const gEnd = Math.min(
-                                    startNum + (groupIdx + 1) * CONFIG.GROUP_NUM - 1,
-                                    startNum + totalFiles - 1
-                                );
-                                const fileName = `9:16拼接组${groupIdx + 1}（${gStart}-${gEnd}号）.jpg`;
-                                resolve({
-                                    fileName: fileName,
-                                    downloadUrl: URL.createObjectURL(blob)
-                                });
-                            }, 'image/jpeg', 1.0);
+                    // 绘制9张图片（3×3网格，确保位置准确）
+                    loadedImages.forEach((item, idx) => {
+                        if (item.img) {
+                            const col = idx % 3;
+                            const row = Math.floor(idx / 3);
+                            const x = col * singleW;
+                            const y = row * singleH;
+                            ctx.drawImage(item.img, x, y, singleW, singleH);
                         }
-                    };
+                    });
 
-                    img.onerror = () => {
-                        loadedCount++;
-                        if (loadedCount === totalGroupImages) {
-                            canvas.toBlob((blob) => {
-                                const gStart = startNum + groupIdx * CONFIG.GROUP_NUM;
-                                const gEnd = Math.min(
-                                    startNum + (groupIdx + 1) * CONFIG.GROUP_NUM - 1,
-                                    startNum + totalFiles - 1
-                                );
-                                const fileName = `9:16拼接组${groupIdx + 1}（${gStart}-${gEnd}号）.jpg`;
-                                resolve({
-                                    fileName: fileName,
-                                    downloadUrl: URL.createObjectURL(blob)
-                                });
-                            }, 'image/jpeg', 1.0);
-                        }
-                    };
-
-                    img.src = URL.createObjectURL(imgData.blob);
+                    // 生成下载Blob
+                    canvas.toBlob((blob) => {
+                        const gStart = startNum + groupIdx * CONFIG.GROUP_NUM;
+                        const gEnd = Math.min(
+                            startNum + (groupIdx + 1) * CONFIG.GROUP_NUM - 1,
+                            startNum + totalFiles - 1
+                        );
+                        const fileName = `${targetRatioSelect.value}拼接组${groupIdx + 1}（${gStart}-${gEnd}号）.jpg`;
+                        resolve({
+                            fileName: fileName,
+                            downloadUrl: URL.createObjectURL(blob)
+                        });
+                    }, 'image/jpeg', 1.0);
                 });
             });
         }
@@ -670,6 +710,7 @@ body {
                 const end = Math.min((groupIdx + 1) * CONFIG.GROUP_NUM, totalProcessed);
                 const groupImages = processedImages.slice(start, end);
 
+                // 拼接当前组
                 const groupResult = await combineSingleGroup(
                     groupImages, 
                     groupIdx, 
@@ -678,6 +719,7 @@ body {
                 );
                 results.push(groupResult);
 
+                // 更新进度
                 const progress = ((groupIdx + 1) / groupCount) * 100;
                 combineProgressBar.style.width = `${progress}%`;
             }
@@ -691,6 +733,7 @@ body {
             startNum = Math.max(startNum, 1);
             startNumInput.value = startNum;
 
+            // 重置结果区域
             resultArea.style.display = 'none';
             resultList.innerHTML = '';
             progressWrapper.style.display = 'block';
@@ -699,9 +742,13 @@ body {
             combineBtn.disabled = true;
 
             try {
+                // 1. 批量处理所有图片（加序号）
                 await batchProcessImages(startNum);
+                
+                // 2. 批量拼接所有组（9张一组）
                 const results = await batchCombineImages(startNum);
 
+                // 3. 显示结果
                 resultArea.style.display = 'block';
                 results.forEach(res => {
                     const item = document.createElement('div');
@@ -713,11 +760,12 @@ body {
                     resultList.appendChild(item);
                 });
 
-                alert(`拼接完成！共处理${processedImages.length}张图片，生成${results.length}组拼图`);
+                alert(`拼接完成！共处理${processedImages.length}张图片，生成${results.length}组${targetRatioSelect.value}拼图`);
             } catch (err) {
                 alert(`拼接失败：${err.message}`);
             } finally {
                 combineBtn.disabled = false;
+                // 5秒后隐藏进度条
                 setTimeout(() => {
                     progressWrapper.style.display = 'none';
                 }, 5000);
