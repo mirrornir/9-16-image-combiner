@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9:16批量图片拼接工具（终极修复版）</title>
+    <title>9:16批量图片拼接工具（字体颜色全自定义）</title>
     <style>
         * {
             margin: 0;
@@ -60,7 +60,7 @@
             font-size: 14px;
             line-height: 1.5;
         }
-        /* 配置栏样式 */
+        /* 扩展配置栏：字体/颜色/大小 */
         .setting-bar {
             background-color: #f8f8f8;
             padding: 20px;
@@ -83,20 +83,30 @@
             font-weight: 500;
             white-space: nowrap;
         }
-        .setting-item input[type="text"] {
-            width: 100px;
+        .setting-item input[type="text"],
+        .setting-item select {
+            width: 120px;
             padding: 8px 12px;
             border: 1px solid #dcdcdc;
             border-radius: 6px;
             font-size: 15px;
             outline: none;
         }
-        .setting-item input[type="text"]:focus {
+        .setting-item input[type="text"]:focus,
+        .setting-item select:focus {
             border-color: #1677ff;
         }
         .setting-item input[type="range"] {
             width: 150px;
             cursor: pointer;
+        }
+        .setting-item input[type="color"] {
+            width: 40px;
+            height: 36px;
+            border: 1px solid #dcdcdc;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 2px;
         }
         .setting-item .num-size-tip {
             color: #666;
@@ -148,7 +158,7 @@
             background-color: #f5f5f5;
             color: #333;
         }
-        /* 双进度条：处理+拼接 */
+        /* 双进度条 */
         .progress-wrapper {
             margin-bottom: 30px;
             display: none;
@@ -241,11 +251,40 @@
                 width: 120px;
             }
         }
+        /* 可选：引入特殊字体（示例：阿里巴巴普惠体，无需本地文件） */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
+        /* 如需添加自定义字体，在这里加@font-face即可，示例：
+        /* 可选：引入特殊字体（示例：阿里巴巴普惠体，无需本地文件） */
+/* 自定义字体引用 - 6款字体 */
+@font-face {
+    font-family: 'Asther';
+    src: url('https://mirrornir.github.io/9-16-image-combiner/Asther-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Honey Monly';
+    src: url('https://mirrornir.github.io/9-16-image-combiner/Honey Monly.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Knive';
+    src: url('https://mirrornir.github.io/9-16-image-combiner/Knive.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Sundries';
+    src: url('https://mirrornir.github.io/9-16-image-combiner/Sundries-DEMO-NEW.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Accountant Signature';
+    src: url('https://mirrornir.github.io/9-16-image-combiner/accountantsignature-rpxr6.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Smooth Fantasy';
+    src: url('https://mirrornir.github.io/9-16-image-combiner/smoothfantasypersonaluse-p7rd1.ttf') format('truetype');
+}
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>9:16批量图片拼接工具（终极修复版）</h1>
+        <h1>9:16批量图片拼接工具（字体颜色全自定义）</h1>
         
         <!-- 上传区域 -->
         <div class="upload-area" id="uploadArea">
@@ -254,18 +293,50 @@
             <input type="file" id="fileInput" accept="image/*" multiple>
         </div>
         
-        <!-- 配置栏：初始数字+序号大小 -->
+        <!-- 扩展配置栏：初始数字+字体+颜色+大小 -->
         <div class="setting-bar">
             <div class="file-count" id="fileCount">已选择：0 张图片</div>
+            
             <div class="setting-item">
                 <label for="startNum">初始序号：</label>
                 <input type="text" id="startNum" value="1" placeholder="正整数">
             </div>
+
+            <div class="setting-item">
+                <label for="fontFamily">数字字体：</label>
+                <select id="fontFamily">
+                    <option value="Microsoft YaHei, Arial">微软雅黑</option>
+                    <option value="SimSun, serif">宋体</option>
+                    <option value="SimHei, sans-serif">黑体</option>
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Noto Sans SC, sans-serif">思源黑体</option>
+                    <!-- 如需添加自定义字体，新增<option value="MyCustomFont">我的自定义字体</option>即可 -->
+                    <!-- 新增6款自定义字体 -->
+                     <option value="Asther">Asther</option>
+                     <option value="Honey Monly">Honey Monly</option>
+                     <option value="Knive">Knive</option>
+                     <option value="Sundries">Sundries</option>
+                     <option value="Accountant Signature">Accountant Signature</option>
+                     <option value="Smooth Fantasy">Smooth Fantasy</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label for="fontColor">字体颜色：</label>
+                <input type="color" id="fontColor" value="#ffffff">
+            </div>
+
+            <div class="setting-item">
+                <label for="strokeColor">描边颜色：</label>
+                <input type="color" id="strokeColor" value="#000000">
+            </div>
+
             <div class="setting-item">
                 <label for="numSize">数字大小：</label>
                 <input type="range" id="numSize" min="0" max="20" step="0.5" value="12">
                 <span class="num-size-tip" id="numSizeTip">12.0%</span>
             </div>
+            
             <div class="ratio-tip">9:16不变形 | 中间偏下序号 | 每9张一组</div>
         </div>
         
@@ -275,7 +346,7 @@
             <button class="btn btn-clear" id="clearBtn">清空已选图片</button>
         </div>
         
-        <!-- 双进度条：图片处理+拼图绘制 -->
+        <!-- 双进度条 -->
         <div class="progress-wrapper" id="progressWrapper">
             <div class="progress-title">1. 图片处理进度（加序号+9:16适配）：</div>
             <div class="progress-container">
@@ -295,27 +366,30 @@
     </div>
 
     <script>
-        // 核心配置（无需修改）
+        // 核心配置
         const CONFIG = {
-            GROUP_NUM: 9,          // 每9张一组
-            RATIO_W: 9,            // 9:16比例
+            GROUP_NUM: 9,
+            RATIO_W: 9,
             RATIO_H: 16,
-            STROKE_RATIO: 0.03,    // 描边宽度（数字高度3%）
-            NUM_POS_Y: 0.85,       // 序号Y轴：图片85%高度（中间偏下）
-            MAX_UPLOAD: 200,       // 最大200张
-            BASE_W: 900,           // 单张基础宽度
-            BG_COLOR: '#ffffff'    // 空白区域填充色
+            STROKE_RATIO: 0.03,
+            NUM_POS_Y: 0.85,
+            MAX_UPLOAD: 200,
+            BASE_W: 900,
+            BG_COLOR: '#ffffff'
         };
 
         // 全局变量
         let selectedFiles = [];
-        let processedImages = []; // 缓存所有处理后的图片（加序号+9:16）
+        let processedImages = [];
         
-        // 页面元素
+        // 页面元素（新增字体/颜色相关）
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const fileCount = document.getElementById('fileCount');
         const startNumInput = document.getElementById('startNum');
+        const fontFamilySelect = document.getElementById('fontFamily');
+        const fontColorInput = document.getElementById('fontColor');
+        const strokeColorInput = document.getElementById('strokeColor');
         const numSizeSlider = document.getElementById('numSize');
         const numSizeTip = document.getElementById('numSizeTip');
         const combineBtn = document.getElementById('combineBtn');
@@ -346,7 +420,7 @@
             uploadArea.addEventListener('click', () => fileInput.click());
             fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 
-            // 3. 序号大小滑块
+            // 3. 数字大小滑块
             numSizeSlider.addEventListener('input', () => {
                 numSizeTip.textContent = `${numSizeSlider.value}%`;
             });
@@ -364,14 +438,12 @@
 
         // 处理上传文件
         function handleFiles(files) {
-            // 过滤图片文件
             const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
             if (imageFiles.length === 0) {
                 alert('请选择有效的图片文件（JPG/PNG/BMP）！');
                 return;
             }
 
-            // 限制200张
             const totalAfterAdd = selectedFiles.length + imageFiles.length;
             if (totalAfterAdd > CONFIG.MAX_UPLOAD) {
                 const addCount = CONFIG.MAX_UPLOAD - selectedFiles.length;
@@ -381,7 +453,6 @@
                 selectedFiles = [...selectedFiles, ...imageFiles];
             }
 
-            // 更新计数，启用按钮
             fileCount.textContent = `已选择：${selectedFiles.length} 张图片`;
             combineBtn.disabled = selectedFiles.length === 0;
         }
@@ -392,6 +463,9 @@
             processedImages = [];
             fileInput.value = '';
             startNumInput.value = 1;
+            fontFamilySelect.value = 'Microsoft YaHei, Arial';
+            fontColorInput.value = '#ffffff';
+            strokeColorInput.value = '#000000';
             numSizeSlider.value = 12;
             numSizeTip.textContent = '12.0%';
             fileCount.textContent = `已选择：0 张图片`;
@@ -403,76 +477,78 @@
             combineProgressBar.style.width = '0%';
         }
 
-        // 单张图片处理：9:16不变形+添加序号（返回Promise）
+        // 单张图片处理（新增字体/颜色自定义）
         function processSingleImage(file, number) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 
                 reader.onload = (e) => {
                     const img = new Image();
-                    // 跨域处理（避免部分图片加载失败）
                     img.crossOrigin = 'anonymous';
                     
                     img.onload = () => {
                         try {
-                            // 1. 计算9:16适配参数（不变形）
+                            // 1. 9:16适配计算
                             const targetRatio = CONFIG.RATIO_W / CONFIG.RATIO_H;
                             const imgRatio = img.width / img.height;
                             let drawW, drawH, offsetX = 0, offsetY = 0;
 
                             if (imgRatio > targetRatio) {
-                                // 图片偏宽，居中裁剪左右
                                 drawH = img.height;
                                 drawW = img.height * targetRatio;
                                 offsetX = (img.width - drawW) / 2;
                             } else {
-                                // 图片偏高，居中裁剪上下
                                 drawW = img.width;
                                 drawH = img.width / targetRatio;
                                 offsetY = (img.height - drawH) / 2;
                             }
 
-                            // 2. 创建9:16画布
+                            // 2. 创建画布
                             const baseH = (CONFIG.BASE_W / CONFIG.RATIO_W) * CONFIG.RATIO_H;
                             const canvas = document.createElement('canvas');
                             canvas.width = CONFIG.BASE_W;
                             canvas.height = baseH;
                             const ctx = canvas.getContext('2d');
 
-                            // 3. 填充白色背景
+                            // 3. 填充背景
                             ctx.fillStyle = CONFIG.BG_COLOR;
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                            // 4. 绘制原图（不变形，居中）
+                            // 4. 绘制原图
                             ctx.drawImage(
                                 img,
                                 offsetX, offsetY, drawW, drawH,
                                 0, 0, canvas.width, canvas.height
                             );
 
-                            // 5. 添加中间偏下序号（自定义大小+醒目）
+                            // 5. 自定义序号样式（核心修改）
                             const numSizeRatio = parseFloat(numSizeSlider.value) / 100;
                             const fontSize = baseH * numSizeRatio;
                             const strokeWidth = fontSize * CONFIG.STROKE_RATIO;
 
-                            // 序号样式
-                            ctx.font = `bold ${fontSize}px "Microsoft YaHei", Arial`;
+                            // 获取用户选择的字体/颜色
+                            const fontFamily = fontFamilySelect.value;
+                            const fontColor = fontColorInput.value;
+                            const strokeColor = strokeColorInput.value;
+
+                            // 设置序号样式（自定义字体+颜色）
+                            ctx.font = `bold ${fontSize}px ${fontFamily}`; // 自定义字体
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'middle';
-                            ctx.fillStyle = '#ffffff'; // 白色字体
-                            ctx.strokeStyle = '#000000'; // 黑色描边
+                            ctx.fillStyle = fontColor; // 自定义字体颜色
+                            ctx.strokeStyle = strokeColor; // 自定义描边颜色
                             ctx.lineWidth = strokeWidth;
 
-                            // 序号位置：水平居中，垂直85%高度（中间偏下）
+                            // 序号位置
                             const x = canvas.width / 2;
                             const y = canvas.height * CONFIG.NUM_POS_Y;
                             const text = number.toString();
 
-                            // 先描边后填充，无背景醒目
+                            // 绘制序号
                             ctx.strokeText(text, x, y);
                             ctx.fillText(text, x, y);
 
-                            // 6. 转换为Blob返回
+                            // 6. 转换为Blob
                             canvas.toBlob((blob) => {
                                 if (blob) {
                                     resolve({
@@ -505,36 +581,31 @@
             });
         }
 
-        // 批量处理所有图片（第一阶段：加序号+9:16）
+        // 批量处理所有图片
         async function batchProcessImages(startNum) {
             processedImages = [];
             const total = selectedFiles.length;
             
             for (let i = 0; i < total; i++) {
                 try {
-                    // 当前图片的序号
                     const currentNum = startNum + i;
-                    // 处理单张图片
                     const processedImg = await processSingleImage(selectedFiles[i], currentNum);
                     processedImages.push(processedImg);
                 } catch (err) {
-                    // 单张失败提示，但继续处理其他图片
                     console.warn(err.message);
                     alert(err.message + '，已跳过该图片继续处理');
                 }
                 
-                // 更新处理进度
                 const progress = ((i + 1) / total) * 100;
                 processProgressBar.style.width = `${progress}%`;
             }
             
-            // 处理完成校验
             if (processedImages.length === 0) {
                 throw new Error('没有可拼接的有效图片');
             }
         }
 
-        // 拼接单组图片（第二阶段：确保所有图片加载完成再绘制）
+        // 拼接单组图片
         function combineSingleGroup(groupImages, groupIdx, startNum, totalFiles) {
             return new Promise((resolve) => {
                 const singleW = CONFIG.BASE_W;
@@ -542,38 +613,28 @@
                 const combineW = singleW * 3;
                 const combineH = singleH * 3;
 
-                // 创建拼接画布
                 const canvas = document.createElement('canvas');
                 canvas.width = combineW;
                 canvas.height = combineH;
                 const ctx = canvas.getContext('2d');
-
-                // 填充白色背景
                 ctx.fillStyle = CONFIG.BG_COLOR;
                 ctx.fillRect(0, 0, combineW, combineH);
 
-                // 加载并绘制所有图片（计数器确保全部加载）
                 let loadedCount = 0;
                 const totalGroupImages = groupImages.length;
 
-                // 遍历组内图片
                 groupImages.forEach((imgData, idx) => {
                     const img = new Image();
                     img.crossOrigin = 'anonymous';
                     
                     img.onload = () => {
-                        // 计算3×3网格位置
                         const col = idx % 3;
                         const row = Math.floor(idx / 3);
                         const x = col * singleW;
                         const y = row * singleH;
-
-                        // 绘制图片
                         ctx.drawImage(img, x, y, singleW, singleH);
 
                         loadedCount++;
-
-                        // 所有图片加载绘制完成后生成结果
                         if (loadedCount === totalGroupImages) {
                             canvas.toBlob((blob) => {
                                 const gStart = startNum + groupIdx * CONFIG.GROUP_NUM;
@@ -591,7 +652,6 @@
                     };
 
                     img.onerror = () => {
-                        // 单张图片加载失败，仍标记为完成（空白显示）
                         loadedCount++;
                         if (loadedCount === totalGroupImages) {
                             canvas.toBlob((blob) => {
@@ -614,19 +674,17 @@
             });
         }
 
-        // 批量拼接所有组（第二阶段）
+        // 批量拼接所有组
         async function batchCombineImages(startNum) {
             const totalProcessed = processedImages.length;
             const groupCount = Math.ceil(totalProcessed / CONFIG.GROUP_NUM);
             const results = [];
 
             for (let groupIdx = 0; groupIdx < groupCount; groupIdx++) {
-                // 截取当前组图片
                 const start = groupIdx * CONFIG.GROUP_NUM;
                 const end = Math.min((groupIdx + 1) * CONFIG.GROUP_NUM, totalProcessed);
                 const groupImages = processedImages.slice(start, end);
 
-                // 拼接当前组
                 const groupResult = await combineSingleGroup(
                     groupImages, 
                     groupIdx, 
@@ -635,7 +693,6 @@
                 );
                 results.push(groupResult);
 
-                // 更新拼接进度
                 const progress = ((groupIdx + 1) / groupCount) * 100;
                 combineProgressBar.style.width = `${progress}%`;
             }
@@ -643,14 +700,12 @@
             return results;
         }
 
-        // 主流程：先处理所有图片 → 再拼接所有组
+        // 主流程
         async function startFullProcess() {
-            // 1. 校验初始数字
             let startNum = parseInt(startNumInput.value) || 1;
             startNum = Math.max(startNum, 1);
             startNumInput.value = startNum;
 
-            // 2. 初始化页面状态
             resultArea.style.display = 'none';
             resultList.innerHTML = '';
             progressWrapper.style.display = 'block';
@@ -659,13 +714,9 @@
             combineBtn.disabled = true;
 
             try {
-                // 第一阶段：批量处理所有图片（加序号+9:16）
                 await batchProcessImages(startNum);
-
-                // 第二阶段：批量拼接所有组
                 const results = await batchCombineImages(startNum);
 
-                // 显示结果
                 resultArea.style.display = 'block';
                 results.forEach(res => {
                     const item = document.createElement('div');
@@ -681,9 +732,7 @@
             } catch (err) {
                 alert(`拼接失败：${err.message}`);
             } finally {
-                // 恢复按钮状态
                 combineBtn.disabled = false;
-                // 5秒后隐藏进度条（可选）
                 setTimeout(() => {
                     progressWrapper.style.display = 'none';
                 }, 5000);
